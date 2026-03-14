@@ -8,14 +8,5 @@ dependencies = [
     "numpy",
 ]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.uv.sources]
-jax = { index = "jax-cuda12" }
-
-[[tool.uv.index]]
-name = "jax-cuda12"
-url = "https://storage.googleapis.com/jax-releases/jax_cuda_releases.html"
-explicit = true
+[tool.uv]
+package = false

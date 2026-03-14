@@ -165,10 +165,13 @@ def main():
 
     print(f"num_params_M: {n_params / 1e6:.2f}M  depth: {N_LAYERS}", flush=True)
 
-    # Warm-up compilation with a throw-away batch
+    # Warm-up: compile train_step and eval_apply
     print("Compiling ...", flush=True)
     dummy_in, dummy_tgt = next(make_batches("train", BATCH_SIZE, np.random.default_rng(0)))
     params, opt_state, _ = train_step(params, opt_state, dummy_in, dummy_tgt)
+    eval_apply = jax.jit(model_apply)
+    dummy_eval, _ = next(make_batches("val", 128, np.random.default_rng(0)))
+    _ = eval_apply(params, dummy_eval)  # compile eval trace
     print("Done. Training ...", flush=True)
 
     t0            = time.perf_counter()
@@ -193,7 +196,7 @@ def main():
     training_seconds = time.perf_counter() - t0
 
     print("Evaluating ...", flush=True)
-    val_bpb       = evaluate_bpb(model_apply, params)
+    val_bpb       = evaluate_bpb(eval_apply, params)
     total_seconds = time.perf_counter() - t0
     vram          = peak_vram_mb()
     mfu           = estimate_mfu(step, training_seconds)
