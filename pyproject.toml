@@ -1,0 +1,21 @@
+[project]
+name = "rnn-mnist"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "jax[cuda12]",
+    "optax",
+    "numpy",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv.sources]
+jax = { index = "jax-cuda12" }
+
+[[tool.uv.index]]
+name = "jax-cuda12"
+url = "https://storage.googleapis.com/jax-releases/jax_cuda_releases.html"
+explicit = true
